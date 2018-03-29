@@ -9,13 +9,19 @@ namespace POpusCodec
 {
     internal class Wrapper
     {
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+#if PLATFORM_IOS
+        const string nativeLibraryName = "__Internal";
+#else
+        const string nativeLibraryName = "opus";
+#endif
+
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_encoder_get_size(Channels channels);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern OpusStatusCode opus_encoder_init(IntPtr st, SamplingRate Fs, Channels channels, OpusApplicationType application);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public static extern string opus_get_version_string();
 
         public static IntPtr opus_encoder_create(SamplingRate Fs, Channels channels, OpusApplicationType application)
@@ -43,7 +49,7 @@ namespace POpusCodec
             return ptr;
         }
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_encode(IntPtr st, short[] pcm, int frame_size, byte[] data, int max_data_bytes);
 
         public static int opus_encode(IntPtr st, short[] pcm, int frame_size, byte[] data)
@@ -61,7 +67,7 @@ namespace POpusCodec
             return payloadLength;
         }
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_encode_float(IntPtr st, float[] pcm, int frame_size, byte[] data, int max_data_bytes);
 
         public static int opus_encode(IntPtr st, float[] pcm, int frame_size, byte[] data)
@@ -84,10 +90,10 @@ namespace POpusCodec
             Marshal.FreeHGlobal(st);
         }
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_encoder_ctl(IntPtr st, OpusCtlSetRequest request, int value);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_encoder_ctl(IntPtr st, OpusCtlGetRequest request, ref int value);
 
         public static int get_opus_encoder_ctl(IntPtr st, OpusCtlGetRequest request)
@@ -113,10 +119,10 @@ namespace POpusCodec
             HandleStatusCode(statusCode);
         }
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_decoder_get_size(Channels channels);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern OpusStatusCode opus_decoder_init(IntPtr st, SamplingRate Fs, Channels channels);
 
         public static IntPtr opus_decoder_create(SamplingRate Fs, Channels channels)
@@ -150,16 +156,16 @@ namespace POpusCodec
         }
 
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_decode(IntPtr st, byte[] data, int len, short[] pcm, int frame_size, int decode_fec);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_decode_float(IntPtr st, byte[] data, int len, float[] pcm, int frame_size, int decode_fec);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_decode(IntPtr st, IntPtr data, int len, short[] pcm, int frame_size, int decode_fec);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern int opus_decode_float(IntPtr st, IntPtr data, int len, float[] pcm, int frame_size, int decode_fec);
 
 
@@ -218,13 +224,13 @@ namespace POpusCodec
         }
 
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public static extern int opus_packet_get_bandwidth(byte[] data);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         public static extern int opus_packet_get_nb_channels(byte[] data);
 
-        [DllImport("opus", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        [DllImport(nativeLibraryName, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern string opus_strerror(OpusStatusCode error);
 
 
